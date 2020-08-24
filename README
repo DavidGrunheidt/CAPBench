@@ -25,7 +25,8 @@ doi: 10.1002/cpe.3892.
 ================================================================================
 
 To compose the benchmark, seven algorithms are proposed, aiming to cover a wide
-range of characteristics. 
+range of characteristics. Six of then were optimized and are available in this 
+repository.
 
 Kernels follow five different parallel patterns:
 
@@ -193,31 +194,4 @@ KERNELS
        is also used to rebuild the L and U matrices from chunks processed in the
        compute clusters.
 
-    7) Traveling-Salesman Problem - TSP
-
-       The TSP consists in solving the routing problem of a hypothetical
-       traveling salesman. Such a route must pass through n towns, only once per
-       town, return to the town of origin and have the shortest possible
-       length. We opted to use a brute-force approach based on a simple
-       heuristic. The sequential version of the algorithm is based on the branch
-       and bound method using brute force. It takes as input the number of towns
-       and a cost matrix, and outputs the minimum path length. The algorithm
-       does a depth-first search looking for the shortest path, pruning paths
-       that have a bigger cost than the current minimum cost. This pruning
-       introduces irregularities in the algorithm, since the search depth needed
-       to discard one of the branches depends on the order in which the branches
-       were searched. Our implementation of TSP uses the Workpool parallel
-       pattern.
-       
-       The MPPA-256 implementation uses a task queue in which tasks are branches
-       of the search tree. Compute clusters take jobs from it to be executed.
-       The number of clusters and the number of threads define the total number
-       of lines of execution. For each cluster, n threads will be spawned, thus
-       totaling n_threads * n_clusters threads. When the minimum path is
-       updated, this update is broadcast to every other cluster so they can also
-       use it to optimize their execution. At the end of the execution, one of
-       the clusters (typically the 0-th) prints the solution. The final solution
-       might have been discovered by any one of the clusters, however all of
-       them are aware of it due to the broadcasts of each discovered minimum
-       path.
 
